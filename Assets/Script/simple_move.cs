@@ -8,6 +8,7 @@ public class simple_move : MonoBehaviour
     Animator animator;
     public float speed = 5f;
     Vector2 move;
+    public GameObject conversationUI;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -19,7 +20,10 @@ public class simple_move : MonoBehaviour
     
     void Update()
     {
-        
+        if (conversationUI.activeSelf)
+        {
+            return; // 대화 UI가 보이면 조작을 막음
+        }
         rb.linearVelocity = new Vector2(move.x * speed, rb.linearVelocity.y);
         leftandright();
         Walkmove();
