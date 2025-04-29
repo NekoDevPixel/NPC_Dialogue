@@ -27,6 +27,7 @@ public class ChatWindow : MonoBehaviour
     
     public GameObject N2PC; // NPC 오브젝트
 
+    public bool Cacceptance = false;
 
     void Start()
     {
@@ -44,7 +45,12 @@ public class ChatWindow : MonoBehaviour
         Activebtn();
         if (Acheck == 1 && Input.GetKeyDown(KeyCode.F))
         {
-            ResetChat(); // 대화 리셋
+            chatWindow.SetActive(false);
+            if(!Cacceptance)
+            {
+                ResetChat();
+            }
+            
         }
     }
 
@@ -89,17 +95,30 @@ public class ChatWindow : MonoBehaviour
         if (Acheck == 0)
         {
             Answerbtn.SetActive(false); // 버튼 비활성화
-            chatText.text = "";
-            chatText.DOText(npc1A[n], 1.5f);
-            tween.DOPlay();
-            Acheck = 1;  // Acheck 값 1로 설정
-            Debug.Log("버튼 비활성화됨");
+            if(n == 0)
+            {
+                chatText.text = "";
+                chatText.DOText(npc1A[n], 1.5f);
+                tween.DOPlay();
+                Acheck = 1; // Acheck 값 1로 설정
+                Debug.Log("버튼 클릭됨: " + n + ", Acheck 값: " + Acheck);
+                Cacceptance = true; // 퀘스트 수락 상태 설정
+            }
+            else if (n == 1)
+            {
+                chatText.text = "";
+                chatText.DOText(npc1A[n], 1.5f);
+                tween.DOPlay();
+                Acheck = 1; // Acheck 값 1로 설정
+                Debug.Log("버튼 클릭됨: " + n + ", Acheck 값: " + Acheck);
+                Cacceptance = false; // 퀘스트 수락 상태 설정
+            }
         }
     }
 
-    void ResetChat()
+    public void ResetChat()
     {
-        chatWindow.SetActive(false);
+        // chatWindow.SetActive(false);
         Answerbtn.SetActive(false);
         nextMessageIndex = 0;
         count = 1;
