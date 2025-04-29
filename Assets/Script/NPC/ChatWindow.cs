@@ -19,26 +19,21 @@ public class ChatWindow : MonoBehaviour
     private int Acheck = 0;
     private int count = 1;
     private int nextMessageIndex = 0;
+    [Header("NPC", order = 2)]
+    public GameObject N1PC; // NPC 오브젝트
+    private String[] npc1M;
+    private String[] npc1A;
+    private String[] playerM;
+    
+    public GameObject N2PC; // NPC 오브젝트
 
-    private string[] NPCMessages = {
-        "이봐, 젊은이… 잠깐 시간 좀 내줄 수 있겠나?",
-        "며칠 전부터 마을 외곽에 수상한 짐승이 출몰하고 있네. 밤마다 가축이 사라지는 걸 보니, 평범한 짐승은 아닌 듯하네…",
-        "부탁이네. 북쪽 언덕에 있는 고대 동굴을 조사해 주게. 이걸 가져가면 도움이 될지도 몰라.(에르만이 ‘낡은 횃불’을 건넨다)"
-    };
-    private string[] NPCAnswers = {
-        "감사하네, 젊은이. 네가 이 일을 맡아준다면, 우리 마을은 한층 안전해질 거야.",
-        "그래, 이해하네. 하지만 늦기 전에 누군가는 나서야 할 걸세…"
-    };
-
-    private string[] playerMessages = {
-        "[퀘스트 수락] : '고대 동굴의 비밀'",
-        "죄송합니다, 지금은 바쁩니다."
-    };
 
     void Start()
     {
-        A1Button.onClick.AddListener(() => OnButtonClick(0));
-        A2Button.onClick.AddListener(() => OnButtonClick(1));
+        npc1M = N1PC.GetComponent<NPC_Chat1>().NPCMessages;
+        npc1A = N1PC.GetComponent<NPC_Chat1>().NPCAnswers;
+        playerM = N1PC.GetComponent<NPC_Chat1>().playerMessages;
+
         chatWindow.SetActive(false);
         Answerbtn.SetActive(false); // 대화 버튼 비활성화
         tween = chatText.GetComponent<DOTweenAnimation>();
@@ -56,7 +51,7 @@ public class ChatWindow : MonoBehaviour
     void ShowChatWindow()
     {
         chatText.text = "";
-        chatText.DOText(NPCMessages[nextMessageIndex], 2f);
+        chatText.DOText(npc1M[nextMessageIndex], 2f);  
         tween.DOPlay();
     }
 
@@ -70,7 +65,7 @@ public class ChatWindow : MonoBehaviour
             count = 0;
         }
         // 대화 진행
-        if (nextMessageIndex < NPCMessages.Length && count == 0)
+        if (nextMessageIndex < npc1M.Length && count == 0)
         {
             ShowChatWindow();
             nextMessageIndex++;
@@ -79,23 +74,23 @@ public class ChatWindow : MonoBehaviour
 
     void Activebtn()
     {
-        if (!ischeck && nextMessageIndex == NPCMessages.Length) // 모든 메시지가 출력되면 버튼 활성화
+        if (!ischeck && nextMessageIndex == npc1M.Length) // 모든 메시지가 출력되면 버튼 활성화
         {
             Answerbtn.SetActive(true);
-            Abtn1.text = playerMessages[0];
-            Abtn2.text = playerMessages[1];
+            Abtn1.text = playerM[0];
+            Abtn2.text = playerM[1];
             ischeck = true; // 대화 상태를 true로 설정
         }
     }
 
-    void OnButtonClick(int n)
+    public void OnButtonClick(int n)
     {
         Debug.Log("버튼 클릭됨: " + n + ", Acheck 값: " + Acheck);
         if (Acheck == 0)
         {
             Answerbtn.SetActive(false); // 버튼 비활성화
             chatText.text = "";
-            chatText.DOText(NPCAnswers[n], 2f);
+            chatText.DOText(npc1A[n], 1.5f);
             tween.DOPlay();
             Acheck = 1;  // Acheck 값 1로 설정
             Debug.Log("버튼 비활성화됨");
